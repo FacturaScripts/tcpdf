@@ -16465,6 +16465,13 @@ class TCPDF {
 					if (isset($dom[($dom[($dom[$key]['parent'])]['parent'])]['listtype'])) {
 						$dom[$key]['listtype'] = $dom[($dom[($dom[$key]['parent'])]['parent'])]['listtype'];
 					}
+               
+               /// hack
+               if( !isset($dom[($dom[$key]['parent'])]['cols']) )
+               {
+                  $dom[($dom[$key]['parent'])]['cols'] = 0;
+               }
+               
 					// set the number of columns in table tag
 					if (($dom[$key]['value'] == 'tr') AND (!isset($dom[($dom[($dom[$key]['parent'])]['parent'])]['cols']))) {
 						$dom[($dom[($dom[$key]['parent'])]['parent'])]['cols'] = $dom[($dom[$key]['parent'])]['cols'];
@@ -16481,6 +16488,13 @@ class TCPDF {
 						$dom[($dom[$key]['parent'])]['content'] = str_replace('<thead>', '', $dom[($dom[$key]['parent'])]['content']);
 						$dom[($dom[$key]['parent'])]['content'] = str_replace('</thead>', '', $dom[($dom[$key]['parent'])]['content']);
 					}
+               
+               /// hack
+               if( !isset($dom[($dom[$key]['parent'])]['thead']) )
+               {
+                  $dom[($dom[$key]['parent'])]['thead'] = '';
+               }
+               
 					// store header rows on a new table
 					if (($dom[$key]['value'] == 'tr') AND ($dom[($dom[$key]['parent'])]['thead'] === true)) {
 						if (TCPDF_STATIC::empty_string($dom[($dom[($dom[$key]['parent'])]['parent'])]['thead'])) {
@@ -16495,7 +16509,15 @@ class TCPDF {
 						// header elements must be always contained in a single page
 						$dom[($dom[$key]['parent'])]['attribute']['nobr'] = 'true';
 					}
-					if (($dom[$key]['value'] == 'table') AND (!TCPDF_STATIC::empty_string($dom[($dom[$key]['parent'])]['thead']))) {
+               
+               /// hack
+               $xyzk = $dom[$key]['parent'];
+               if( !isset($dom[$dom[$key]['parent']]['thead']) )
+               {
+                  $dom[$xyzk]['thead'] = '';
+               }
+               
+					if (($dom[$key]['value'] == 'table') AND (!TCPDF_STATIC::empty_string($dom[$xyzk]['thead']))) {
 						// remove the nobr attributes from the table header
 						$dom[($dom[$key]['parent'])]['thead'] = str_replace(' nobr="true"', '', $dom[($dom[$key]['parent'])]['thead']);
 						$dom[($dom[$key]['parent'])]['thead'] .= '</tablehead>';
@@ -16925,7 +16947,12 @@ class TCPDF {
 							$colspan = 1;
 						}
 						$dom[$key]['attribute']['colspan'] = $colspan;
-						$dom[($dom[$key]['parent'])]['cols'] += $colspan;
+                  
+                  /// hack
+                  if( isset($dom[($dom[$key]['parent'])]['cols']) )
+                  {
+                     $dom[($dom[$key]['parent'])]['cols'] += $colspan;
+                  }
 					}
 					// text direction
 					if (isset($dom[$key]['attribute']['dir'])) {
