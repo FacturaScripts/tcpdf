@@ -18831,7 +18831,9 @@ Putting 1 is equivalent to putting 0 and calling Ln() just after. Default value:
 			}
 			case 'a': {
 				if (array_key_exists('href', $tag['attribute'])) {
-					$this->HREF['url'] = $tag['attribute']['href'];
+					if (isset($this->HREF['url'])) {
+						$this->HREF['url'] = $tag['attribute']['href'];
+					}
 				}
 				break;
 			}
